@@ -37,5 +37,3 @@ Student_db/
    ```bash
    python app.py
    ```
-
-4. Open your browser and go to `http://localhost:5000`
