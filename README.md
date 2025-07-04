@@ -24,7 +24,7 @@ Student_db/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/AhamedHassian/student-db-app.git
+   git clone https://github.com/AhamedHassian/Student_Database.git
    cd student-db-app/Student_db
    ```
 
