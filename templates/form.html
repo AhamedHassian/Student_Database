@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        function addAddressGroup() {
+            const container = document.getElementById('address-fields');
+            const html = `
+            <div class="address-group border p-3 mb-3">
+                <input class="form-control mb-2" type="text" name="block" placeholder="Block / Building No (Optional)">
+                <input class="form-control mb-2" type="text" name="street" placeholder="Street" required>
+                <input class="form-control mb-2" type="text" name="area" placeholder="Area" required>
+                <input class="form-control mb-2" type="text" name="city" placeholder="City" required>
+                <input class="form-control mb-2" type="text" name="district" placeholder="District" required>
+                <input class="form-control mb-2" type="text" name="state" placeholder="State" required>
+                <input class="form-control mb-2" type="text" name="pincode" pattern="\\d{6}" title="6-digit PIN code" required>
+                <button type="button" class="btn btn-danger btn-sm mt-2" onclick="this.parentElement.remove()">Remove</button>
+            </div>`;
+            container.insertAdjacentHTML('beforeend', html);
+        }
+    </script>
+</head>
+<body class="container mt-4">
+    <h2>{{ 'Edit' if student else 'Add' }} Student</h2>
+    <form method="POST" novalidate>
+        <div class="mb-3">
+            <label>Name:</label>
+            <input class="form-control" type="text" name="name" pattern="^[A-Za-z\\s]+$" title="Only letters and spaces allowed" required value="{{ student.name if student else '' }}">
+        </div>
+        <div class="mb-3">
+            <label>Email:</label>
+            <input class="form-control" type="email" name="email" required value="{{ student.email if student else '' }}">
+        </div>
+        <div class="mb-3">
+            <label>Phone Number:</label>
+            <input class="form-control" type="text" name="phone" pattern="\\d{10}" maxlength="10" minlength="10" required title="Enter a 10-digit phone number" value="{{ student.phone if student else '' }}">
+        </div>
+        <div class="mb-3">
+            <label>Blood Group:</label>
+            <select class="form-control" name="blood_group" required>
+                {% set groups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'] %}
+                {% for group in groups %}
+                <option value="{{ group }}" {% if student and student.blood_group == group %}selected{% endif %}>{{ group }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Age:</label>
+            <input class="form-control" type="number" name="age" required value="{{ student.age if student else '' }}">
+        </div>
+        <div class="mb-3">
+            <label>Course:</label>
+            <input class="form-control" type="text" name="course" required value="{{ student.course if student else '' }}">
+        </div>
+        <div class="mb-3">
+            <label>Addresses:</label>
+            <div id="address-fields">
+                {% if student %}
+                    {% for addr in student.addresses %}
+                    <div class="address-group border p-3 mb-3">
+                        <input class="form-control mb-2" type="text" name="block" value="{{ addr.block or '' }}" placeholder="Block / Building No (Optional)">
+                        <input class="form-control mb-2" type="text" name="street" value="{{ addr.street }}" placeholder="Street" required>
+                        <input class="form-control mb-2" type="text" name="area" value="{{ addr.area }}" placeholder="Area" required>
+                        <input class="form-control mb-2" type="text" name="city" value="{{ addr.city }}" placeholder="City" required>
+                        <input class="form-control mb-2" type="text" name="district" value="{{ addr.district }}" placeholder="District" required>
+                        <input class="form-control mb-2" type="text" name="state" value="{{ addr.state }}" placeholder="State" required>
+                        <input class="form-control mb-2" type="text" name="pincode" value="{{ addr.pincode }}" placeholder="Pincode" pattern="\\d{6}" required>
+                        <button type="button" class="btn btn-danger btn-sm mt-2" onclick="this.parentElement.remove()">Remove</button>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="address-group border p-3 mb-3">
+                        <input class="form-control mb-2" type="text" name="block" placeholder="Block / Building No (Optional)">
+                        <input class="form-control mb-2" type="text" name="street" placeholder="Street" required>
+                        <input class="form-control mb-2" type="text" name="area" placeholder="Area" required>
+                        <input class="form-control mb-2" type="text" name="city" placeholder="City" required>
+                        <input class="form-control mb-2" type="text" name="district" placeholder="District" required>
+                        <input class="form-control mb-2" type="text" name="state" placeholder="State" required>
+                        <input class="form-control mb-2" type="text" name="pincode" placeholder="Pincode" pattern="\\d{6}" required>
+                    </div>
+                {% endif %}
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="addAddressGroup()">Add Address</button>
+        </div>
+        <button class="btn btn-success" type="submit">Submit</button>
+        <a class="btn btn-link" href="{{ url_for('index') }}">Cancel</a>
+    </form>
+</body>
+</html>
